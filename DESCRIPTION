@@ -1,0 +1,9 @@
+Package: nwtclimate
+Type: Package
+Title: NWT stitched and merged climate dataset
+Version: 0.0.1.0
+Author: Ryan Connon
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.2.3
+
