@@ -107,10 +107,11 @@ climatedf<-dplyr::bind_rows(BB,
                             Winter_Lake_FTS,
                             YK_Ski_Club)
 # add lat lon and elev using appendvar function
-sites <- read_csv(paste0(path,"/sites.csv"))
+sites <- read.csv(paste0(path,"/sites.csv"))
 lat = appendvar(climatedf$Station, sites$Station, sites$latitude)
 lon = appendvar(climatedf$Station, sites$Station, sites$longitude)
 elev = appendvar(climatedf$Station, sites$Station, sites$elevation)
+climatedf <- cbind(climatedf, lat, lon, elev)
 
 # change col names
 colnames <- c(
@@ -152,8 +153,9 @@ colnames <- c(
   "rn_flag",
   "net_SW_flag",
   "net_LW_flag",
-  "notes",
+  "station_notes",
   "water_depth_corr",
+  "water_depth_corr_flag",
   "lat",
   "lon",
   "elev")
@@ -168,7 +170,7 @@ climatedf$year = dplyr::if_else(is.na(climatedf$year), lubridate::year(climatedf
 climatedf$hour = dplyr::if_else(is.na(climatedf$hour), lubridate::hour(climatedf$date), as.integer(climatedf$hour))
 
 #remove -6999 or -9999 values
-NANvalues = c(-6999, 6999, -99999)
+NANvalues = c(-6999, 6999, -99999, "NULL")
 #climatedf[, 8:28][climatedf[, 8:28] %in% NANvalues] <- NA #takes too long to run
 climatedf$t_water[climatedf$t_water %in% NANvalues] <- NA
 climatedf$RH[climatedf$RH %in% NANvalues] <- NA
@@ -194,18 +196,21 @@ FTS_stns = c("Daring FTS",
 climatedf$wind_sp = dplyr::if_else(!is.na(climatedf$wind_sp)& climatedf$station_name %in% FTS_stns,  climatedf$wind_sp/3.6, climatedf$wind_sp, missing = climatedf$wind_sp)
 
 # flag data & prep for climate db
+# remove any columns with with NA or blank colname
+climatedf <- climatedf %>%
+  dplyr::select(which(colnames(.) != "" & !is.na(colnames(.))))
 # remove Walker Bay & other rows of NAs
 climatedf <- climatedf %>%
-  dplyr::filter((is.na(hour)==FALSE & is.na(date) == FALSE))
+  dplyr::filter(!is.na(hour) & !is.na(date))
 
 # remove trailing zeros from hour col, replace 24 with 0
 climatedf$hour <- ifelse(climatedf$hour == "0", climatedf$hour, sub("0+$", "", climatedf$hour))
 climatedf$hour[climatedf$hour == "24"] <- "0"
 
-# Hour & Time columns
-climatedf$time <- lubridate::ymd_hms(base::paste(climatedf$date,base::sprintf("%02d:00:00",climatedf$hour)))
+# Fix hour column
+climatedf$hour <- paste0(sprintf("%02d", as.integer(climatedf$hour)), ":00")
 climatedf$hour <- base::sprintf("%02d:00", climatedf$hour)
-climatedf <- climatedf[, !names(climatedf) %in% c("time")]
+
 
 # note flag data function is in "dependencies_functions.R"
 climatedf_flagged <- flag_data(climatedf)
