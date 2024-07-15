@@ -307,4 +307,71 @@ parameter_name <- function(parameter) {
 }
 
 
+###############################################
 
+#' Separate dfs by variable
+#' Creates a df for each variable, its flag, and additional columns defined in cd_prep script
+#' @param df dataframe: climatedf
+#' @param additional_columns station_name, date, time, and other columns to keep in all dfs split by variable
+#' @param main_columns variable columns
+#' @param flag_columns flag columns corresponding to each variable
+#'
+#' @return list of split dataframes - one per variable
+#'
+#' @examples
+#'   climatedf_list <- split_df(
+#'    df = climatedf,
+#'    additional_columns = additional_columns,
+#'    main_columns = main_columns,
+#'    flag_col = flag_col
+#'  )
+#' @export
+
+
+
+split_df <- function(df, additional_columns, main_columns, flag_columns) {
+  dfs <- list()
+
+  for (i in seq_along(main_columns)) {
+    main_col <- main_columns[i]
+    flag_col <- flag_columns[i]
+
+    if (main_col %in% names(df) & flag_col %in% names(df)) {
+      #df name will be same as main_columns name - important for removing NAs
+      #df_name <- sub("_flag$","", flag_col)
+      new_df <- df[c(additional_columns, main_col, flag_col)]
+      dfs[[paste(main_col)]] <- new_df
+    } else {
+      warning("Main column or flag column missing in dataframe.")
+    }
+  }
+
+  return(dfs)
+}
+
+
+
+
+#############################
+#' Remove rows where variable is NA
+#' Note: for each df in list of variable dfs in preparation for load into DB
+#' @param list of dataframes for each variable
+#'
+#' @examples
+#' climatedf_list <- remove_na_rows(climatedf_list)
+#' # To extract df from list:
+#' rain <- climatedf_list[['rain_mm']]
+#' @export
+
+
+remove_na_rows <- function(cliamtedf_list) {
+  for(df_name in names(climatedf_list)){
+    df <- climatedf_list[[df_name]]
+    col_name <- df_name
+
+    df <- df[!is.na(df[[col_name]]),] # remove NAs where colname = dfname
+
+    climatedf_list[[df_name]] <- df # update list
+  }
+  return(climatedf_list)
+}
