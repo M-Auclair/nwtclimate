@@ -185,15 +185,6 @@ climatedf$t_soil_3 [climatedf$t_soil_3 %in% NANvalues] <- NA
 climatedf$t_soil_4 [climatedf$t_soil_4 %in% NANvalues] <- NA
 climatedf$water_depth[climatedf$water_depth %in% NANvalues] <- NA
 
-FTS_stns = c("Daring FTS",
-             "Harry FTS",
-             "Hoarfrost FTS",
-             "ITH FTS",
-             "Peel FTS",
-             "Winter Lake")
-
-#change FTS wind speed values from km hr-1 to m s-1
-climatedf$wind_sp = dplyr::if_else(!is.na(climatedf$wind_sp)& climatedf$station_name %in% FTS_stns,  climatedf$wind_sp/3.6, climatedf$wind_sp, missing = climatedf$wind_sp)
 
 # flag data & prep for climate db
 # remove any columns with with NA or blank colname
