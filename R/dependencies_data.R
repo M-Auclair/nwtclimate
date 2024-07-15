@@ -2,7 +2,7 @@
 
 # Create a list of NWT communities to include
 # Ensure that each community listed here has stations identified in the stitch() function
-# Define station_id of all stations. 
+# Define station_id of all stations.
 ## Ensure that the order is the correct order to have stitched
 
 locations <- c(
@@ -10,7 +10,7 @@ locations <- c(
   rep("Athabasca", 5),
   rep("Cape Providence", 1),
   rep("Colville Lake", 2),
-  rep("Deadmen Valley", 1), 
+  rep("Deadmen Valley", 1),
   rep("Deline", 3),
   rep("Fort Chipewyan", 4),
   rep("Fort Good Hope", 4),
@@ -99,7 +99,7 @@ ids <- c(
   1635 # Yohin
 )
 
-df_locations <- data.frame(location = locations, 
+df_locations <- data.frame(location = locations,
                    station_id = ids)
 
 ###########################################
@@ -124,7 +124,7 @@ df_locations <- data.frame(location = locations,
 #   1794,  # Sachs Harbour
 #   51058, # Yellowknife
 #   1706   # Yellowknife
-#   
+#
 # )
 
 ############################################################################################
@@ -134,19 +134,56 @@ df_locations <- data.frame(location = locations,
 
 # weathercan::stations_search("Mackenzie", interval = "day")
 # ids <- c(47047, 2459, 2466, 2467, 2470)
-# 
+#
 # df <- weathercan::weather_dl(station_id = ids,
 #                              start = "1990-01-01",
 #                              end = "2024-12-31",
 #                              interval = "day")
-# 
+#
 # df[,12] <- as.numeric(unlist(df[,12]))
 # df[,13] <- as.numeric(unlist(df[,13]))
 # df[,14] <- as.numeric(unlist(df[,14]))
-# 
+#
 # data <- readRDS(paste0(data_path, updated_data, extension))
 # data <- dplyr::bind_rows(data, df)
 # saveRDS(data, file = paste0(data_path, updated_data, extension))
-# 
-# 
+#
+#
+
+############################################################################################
+waterssites = c("Blueberry",
+                "BDL",
+                "Colomac",
+                "Daring FTS",
+                "Daring Lake",
+                "Dempster515",
+                "Dempster85",
+                "Discovery",
+                "Giant Mine",
+                "Harry FTS",
+                "Harry",
+                "Hoarfrost FTS",
+                "ITH FTS",
+                "Lupin",
+                "Mile222",
+                "Nanisivik",
+                "Peel FTS",
+                "Peel",
+                "Pocket",
+                "Salmita",
+                "Silver Bear",
+                "Snare Rapids",
+                "Taglu",
+                "Tibbitt",
+                "Tibbitt Pine",
+                "Tuktoyaktuk",
+                "Walker Bay",
+                "Winter Lake",
+                "YK Ski Club",
+                "Scotty Creek",
+                "Powder Lake",
+                "Yaltea Lake",
+                "Ninelin Lake",
+                "Forestry Lake",
+                "Wrigley")
 
