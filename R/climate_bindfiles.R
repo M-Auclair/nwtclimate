@@ -1,6 +1,9 @@
-#Reading in raw climate files
+# Binding raw waters climate files
 
-path <- "C:/Users/maucl/Documents/Data/csv_data/waters" #set this to filepath
+path <- "C:/Users/maucl/Documents/Data/csv_data/waters" #set to filepath where data is stored
+savepath <- "C:/Users/maucl/Documents/Data/R_data" # path where new file will be saved
+
+
 
 # need readxl package installed for below:
 #note: the following cannot be performed in a loop, it produces errors that delete data (!)
@@ -35,13 +38,13 @@ path <- "C:/Users/maucl/Documents/Data/csv_data/waters" #set this to filepath
   YK_Ski_Club <- readxl::read_excel(paste0(path, "/YK Ski Club.xlsx"), col_types = c("text", "numeric", "numeric", "numeric", "numeric", "numeric","date", "numeric", "numeric", "numeric",  "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "numeric"))
 }
 # reading in new FTS data:
-datapath <- "C:/Users/maucl/Documents/Data/R_data"
-{Daring_FTS <- readRDS(paste0(datapath, "/Daring FTS.rds"))
-  Harry_FTS <- readRDS(paste0(datapath, "/Harry FTS.rds"))
-  Hoarfrost_FTS <- readRDS(paste0(datapath, "/Hoarfrost FTS.rds"))
-  ITH_FTS <- readRDS(paste0(datapath, "/ITH FTS.rds"))
-  Peel_FTS <- readRDS(paste0(datapath, "/Peel FTS.rds"))
-  Winter_Lake_FTS <- readRDS(paste0(datapath, "/WinterLake FTS.rds"))
+# NOTE: may need to change path for FTS files below to where they are saved on your directory
+{Daring_FTS <- readRDS(paste0(savepath, "/Daring FTS.rds"))
+  Harry_FTS <- readRDS(paste0(savepath, "/Harry FTS.rds"))
+  Hoarfrost_FTS <- readRDS(paste0(savepath, "/Hoarfrost FTS.rds"))
+  ITH_FTS <- readRDS(paste0(savepath, "/ITH FTS.rds"))
+  Peel_FTS <- readRDS(paste0(savepath, "/Peel FTS.rds"))
+  Winter_Lake_FTS <- readRDS(paste0(savepath, "/WinterLake FTS.rds"))
 
   # applying same convert_columns function as in FTS_bind.R
   convert_classes <- function(x) {
@@ -70,6 +73,8 @@ datapath <- "C:/Users/maucl/Documents/Data/R_data"
   ITH_FTS <- convert_classes(ITH_FTS)
   Peel_FTS <- convert_classes(Peel_FTS)
   Winter_Lake_FTS <- convert_classes(Winter_Lake_FTS)
+
+
 }
 #Binding the rows from these files together:
 climatedf<-dplyr::bind_rows(BB,
@@ -101,12 +106,11 @@ climatedf<-dplyr::bind_rows(BB,
                             Walker_Bay,
                             Winter_Lake_FTS,
                             YK_Ski_Club)
-# add lat lon and elev
-sites <- readr::read_csv(paste0(path,"/sites.csv"))
+# add lat lon and elev using appendvar function
+sites <- read_csv(paste0(path,"/sites.csv"))
 lat = appendvar(climatedf$Station, sites$Station, sites$latitude)
 lon = appendvar(climatedf$Station, sites$Station, sites$longitude)
 elev = appendvar(climatedf$Station, sites$Station, sites$elevation)
-climatedf <- cbind(climatedf, lat, lon, elev)
 
 # change col names
 colnames <- c(
@@ -206,10 +210,8 @@ climatedf <- climatedf[, !names(climatedf) %in% c("time")]
 # note flag data function is in "dependencies_functions.R"
 climatedf_flagged <- flag_data(climatedf)
 
-# save file
-newpath <- "C:/Users/maucl/Documents/Data/R_data"
-saveRDS(climatedf, paste0(newpath, "/allstations_flagged_raw.rds"))
-
+# save file in savepath defined above
+saveRDS(climatedf, paste0(savepath, "/allstations_flagged_raw.rds"))
 
 
 
