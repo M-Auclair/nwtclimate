@@ -10,11 +10,11 @@ climatedf <- readRDS(paste0(file_path, "/", file_name ))
 # remove Rain_check_flag column if present
 climatedf <- climatedf[, !names(climatedf) %in% c("Rain_check_flag")]
 
-#rename hour column to time, then remove date and hour col
+#rename hour column to cd_time, then remove date and hour col
 climatedf$cd_time <- climatedf$hour
 climatedf <- climatedf[, !(names(climatedf) %in% c("date", "hour"))]
 
-#rename to match fieldnames
+#rename to match fieldnames in DB
 climatedf <- climatedf %>%
   dplyr::rename(
     rain_mm = total_precip,
@@ -53,7 +53,7 @@ climatedf <- climatedf %>%
     sr50_flag = sr50_flag
   )
 
-#add additional flag columns
+#add missing flag columns
 new_flag_cols <- c("t_soil_1_flag",
                    "t_soil_2_flag",
                    "t_soil_3_flag",
@@ -69,7 +69,7 @@ new_flag_cols <- c("t_soil_1_flag",
 
 climatedf[,new_flag_cols] <- NA
 
-# add
+# columns to include in all variable dfs
 additional_columns <- c("station_name",
                         "station_notes",
                         "cd_year",
@@ -77,7 +77,7 @@ additional_columns <- c("station_name",
                         "cd_month",
                         "cd_day",
                         "cd_time")
-
+# variables
 main_columns <- c(
   "t_air_high_C",
   "RH_high_per",
@@ -103,6 +103,7 @@ main_columns <- c(
   "water_depth_corr_m"
 )
 
+# variable flags
 flag_col <- c(
   "t_air_high_flag",
   "RH_high_flag",

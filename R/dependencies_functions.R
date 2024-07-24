@@ -241,7 +241,15 @@ convert_classes_daily <- function(df) {
   return(df)
 }
 
-
+###############################
+#' Convert column classes of FTS waters data
+#' This function takes daily data and converts columns to appropriate class (numeric or character)
+#' @param df Dataframe
+#' @return Dataframe with appropriate column classes
+#' @note This function is meant to be applied to flagged and/or data
+#' @examples
+#' df <- convert_classes_daily(df)
+#' @export
 
 
 ###################################################################################################
@@ -317,7 +325,7 @@ parameter_name <- function(parameter) {
 #' @param flag_columns flag columns corresponding to each variable
 #'
 #' @return list of split dataframes - one per variable
-#'
+#' @note main_columns, flag_col, and additional_columns need to be specified
 #' @examples
 #'   climatedf_list <- split_df(
 #'    df = climatedf,
@@ -361,6 +369,7 @@ split_df <- function(df, additional_columns, main_columns, flag_columns) {
 #' climatedf_list <- remove_na_rows(climatedf_list)
 #' # To extract df from list:
 #' rain <- climatedf_list[['rain_mm']]
+#' @return list of dataframes with NA values removed
 #' @export
 
 
@@ -375,3 +384,5 @@ remove_na_rows <- function(cliamtedf_list) {
   }
   return(climatedf_list)
 }
+
+
