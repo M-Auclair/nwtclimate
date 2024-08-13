@@ -212,7 +212,7 @@ summarize_data <- function(df) {
   return(summarized_data)
 }
 
-
+#############################################
 #' Convert column classes of daily data
 #' This function takes daily data and converts columns to appropriate class (numeric or character)
 #' @param df Dataframe
@@ -241,15 +241,103 @@ convert_classes_daily <- function(df) {
   return(df)
 }
 
-###############################
-#' Convert column classes of FTS waters data
-#' This function takes daily data and converts columns to appropriate class (numeric or character)
+
+#######################################################
+#' Remove duplicate rows of data
+#' This function creates a datetime column and removes all duplicate rows based on datetime, then removes the datetime column
 #' @param df Dataframe
-#' @return Dataframe with appropriate column classes
-#' @note This function is meant to be applied to flagged and/or data
+#' @return Dataframe
+#' @note To be used in cases where each site is its own df, after binding new data to existing data
 #' @examples
-#' df <- convert_classes_daily(df)
+#' df <- remove_duplicates(df)
 #' @export
+
+remove_duplicates <- function(data){
+  data$DateTime <- as.POSIXct(paste(data$date, data$hour), format = "%Y-%m-%d %H")
+  data <- data[!duplicated(data$DateTime), ]
+  data <- subset(data, select = -DateTime)
+}
+
+###################################
+#' Creates and/or formats date, year, month, day, JD, and hour columns
+#' @param df Dataframe
+#' @return Dataframe, with ymd columns
+#' @examples
+#' df <- ymd_cols(df)
+#' @export
+#'
+ymd_cols <- function(data) {
+data$date <- as.Date(new_data$date, format = "%Y-%m-%d")
+data$year <- format(data$date, "%Y")
+data$month <- format(data$date, "%m")
+data$day <- format(data$date, "%d")
+data$JD <- as.numeric(format(data$date, "%j"))
+data$hour <- as.numeric(format(data$date, "%H"))
+return(data)
+}
+
+
+###################################
+#' Convert column classes of a df
+#'
+#' @param df variable from df1 to align with df2
+#'
+#' @return dataframe with column classes
+#' @note columns and classes are pre-assigned within the function
+#' @note function used in FTS_bind, climate_bindfiles
+#' @examples
+#' df <- convert_classes(df)
+#' @export
+#'
+convert_classes <- function(x) {
+  char_cols <- c("station_name",
+                 "station_notes",
+                 "t_air_flag",
+                 "RH_flag",
+                 "rain_flag",
+                 "wind_sp_flag",
+                 "wind_dir_flag",
+                 "sw_in_flag",
+                 "sr50_flag",
+                 "rn_flag",
+                 "net_SW_flag",
+                 "net_LW_flag",
+                 "station_notes",
+                 "water_depth_corr",
+                 "water_depth_corr_flag")
+
+  num_cols <- c("year","JD","month","day","hour","t_air",
+                "RH",
+                "total_precip",
+                "wind_sp",
+                "wind_dir",
+                "net_SW",
+                "net_LW",
+                "rn",
+                "sw_in",
+                "sr50",
+                "t_soil_1",
+                "t_soil_2",
+                "t_soil_3",
+                "t_soil_4",
+                "t_soil_5",
+                "t_soil_6",
+                "t_air_2",
+                "RH_2",
+                "t_water",
+                "t_water_2",
+                "water_depth",
+                "water_depth_corr",
+                "lat","lon","elev")
+
+  char_cols <- intersect(char_cols, names(x))
+  num_cols <- intersect(num_cols, names(x))
+
+  x[char_cols] <- lapply(x[char_cols], as.character)
+  x[num_cols] <- lapply(x[num_cols], as.numeric)
+
+  return(x)
+}
 
 
 ###################################################################################################
@@ -313,7 +401,6 @@ parameter_name <- function(parameter) {
   parameter
 
 }
-
 
 ###############################################
 

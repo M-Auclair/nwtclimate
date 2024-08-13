@@ -37,6 +37,79 @@ savepath <- "C:/Users/maucl/Documents/Data/R_data" # path where new file will be
   #Winter_Lake_FTS <- readxl::read_excel(paste0(path, "/Winter Lake FTS.xlsx"), col_types = c("text", "numeric", "numeric", "numeric", "numeric", "numeric","date", "numeric", "numeric", "numeric",  "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "numeric"))
   YK_Ski_Club <- readxl::read_excel(paste0(path, "/YK Ski Club.xlsx"), col_types = c("text", "numeric", "numeric", "numeric", "numeric", "numeric","date", "numeric", "numeric", "numeric",  "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "numeric"))
 }
+# change colnames of non-FTS stations
+
+colnames <- c(
+  "station_name",
+  "year",
+  "JD",
+  "month",
+  "day",
+  "hour",
+  "date",
+  "t_air",
+  "RH",
+  "total_precip",
+  "wind_sp",
+  "wind_dir",
+  "net_SW",
+  "net_LW",
+  "rn",
+  "sw_in",
+  "sr50",
+  "t_soil_1",
+  "t_soil_2",
+  "t_soil_3",
+  "t_soil_4",
+  "t_soil_5",
+  "t_soil_6",
+  "t_air_2",
+  "RH_2",
+  "t_water",
+  "t_water_2",
+  "water_depth",
+  "t_air_flag",
+  "RH_flag",
+  "rain_flag",
+  "wind_sp_flag",
+  "wind_dir_flag",
+  "sw_in_flag",
+  "sr50_flag",
+  "rn_flag",
+  "net_SW_flag",
+  "net_LW_flag",
+  "station_notes",
+  "water_depth_corr",
+  "water_depth_corr_flag",
+  "lat",
+  "lon",
+  "elev")
+colnames(BB) <- colnames
+colnames(BDL) <- colnames
+colnames(Colomac) <- colnames
+colnames(Daring_Lake) <- colnames
+colnames(Dempster85) <- colnames
+colnames(Dempster515) <- colnames
+colnames(Discovery) <- colnames
+colnames(Giant_Mine) <- colnames
+colnames(Harry) <- colnames
+colnames(Lupin) <- colnames
+colnames(Mile_222) <- colnames
+colnames(Nanisivik) <- colnames
+colnames(Peel) <- colnames
+colnames(Pocket) <- colnames
+colnames(Salmita) <- colnames
+colnames(Silver_Bear) <- colnames
+colnames(Snare_Rapids) <- colnames
+colnames(Taglu) <- colnames
+colnames(Tibbitt_muskeg) <- colnames
+colnames(Tibbit_Pine) <- colnames
+colnames(Tuktoyaktuk) <- colnames
+colnames(Walker_Bay) <- colnames
+colnames(YK_Ski_Club) <- colnames
+
+
+
 # reading in new FTS data:
 # NOTE: may need to change path for FTS files below to where they are saved on your directory
 {Daring_FTS <- readRDS(paste0(savepath, "/Daring FTS.rds"))
@@ -46,16 +119,47 @@ savepath <- "C:/Users/maucl/Documents/Data/R_data" # path where new file will be
   Peel_FTS <- readRDS(paste0(savepath, "/Peel FTS.rds"))
   Winter_Lake_FTS <- readRDS(paste0(savepath, "/WinterLake FTS.rds"))
 
-  # applying same convert_columns function as in FTS_bind.R
+  # apply convert_classes function pre-binding dfs (function in dependencies_functions)
   convert_classes <- function(x) {
+    char_cols <- c("station_name",
+                   "station_notes",
+                   "t_air_flag",
+                   "RH_flag",
+                   "rain_flag",
+                   "wind_sp_flag",
+                   "wind_dir_flag",
+                   "sw_in_flag",
+                   "sr50_flag",
+                   "rn_flag",
+                   "net_SW_flag",
+                   "net_LW_flag",
+                   "station_notes",
+                   "water_depth_corr",
+                   "water_depth_corr_flag")
 
-    char_cols <- c("Station","dataflag_AT","dataflag_RH","dataflag_Rn","dataflag_WS","dataflag_WD",
-                   "dataflag_ISW","dataflag_SD","dataflag_NR","dataflag_NSW","dataflag_NLW","notes")
-
-    num_cols <- c("Year","JD","Month","Day","Hour","Air Temperature","Relative Humidity","Rainfall",
-                  "Wind Speed","Wind direction","Net SW Radiation", "Net LW Radiation","Net Radiation",
-                  "Incoming SW Radiation","Snow depth","TS_1","TS_2", "TS_3","TS_4","TS_5", "TS_6",
-                  "Air Temperature_2","Relative Humidity_2","Twater","Twater_2","DepthTW","WDep_corr")
+    num_cols <- c("year","JD","month","day","hour","t_air",
+                  "RH",
+                  "total_precip",
+                  "wind_sp",
+                  "wind_dir",
+                  "net_SW",
+                  "net_LW",
+                  "rn",
+                  "sw_in",
+                  "sr50",
+                  "t_soil_1",
+                  "t_soil_2",
+                  "t_soil_3",
+                  "t_soil_4",
+                  "t_soil_5",
+                  "t_soil_6",
+                  "t_air_2",
+                  "RH_2",
+                  "t_water",
+                  "t_water_2",
+                  "water_depth",
+                  "water_depth_corr",
+                  "lat","lon","elev")
 
     char_cols <- intersect(char_cols, names(x))
     num_cols <- intersect(num_cols, names(x))
@@ -208,6 +312,5 @@ climatedf_flagged <- flag_data(climatedf)
 
 # save file in savepath defined above
 saveRDS(climatedf, paste0(savepath, "/allstations_flagged_raw.rds"))
-
 
 
