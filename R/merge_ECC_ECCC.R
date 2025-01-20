@@ -35,8 +35,8 @@ StationMerge<-function(
   data_ECCC <- replace_coordinates(data_ECCC, "Fort McPherson", 67.45, -134.88)
   data_ECCC <- replace_coordinates(data_ECCC, "Tulita", 64.90, -125.57)
 
-  data_ECC$time <- lubridate::ymd_hms(base::paste(data_ECC$date,base::sprintf("%02d:00:00",data_ECC$hour)))
-  data_ECC$hour <- base::sprintf("%02d:00", data_ECC$hour)
+  # data_ECC$time <- lubridate::ymd_hms(base::paste(data_ECC$date,base::sprintf("%02d:00:00",data_ECC$hour)))
+  # data_ECC$hour <- base::sprintf("%02d:00", data_ECC$hour)
 
   data_ECC$merged_name <- data_ECC$station_name
 
@@ -50,13 +50,13 @@ StationMerge<-function(
   data_ECC_cleaned_daily$day <- as.numeric(data_ECC_cleaned_daily$day)
   data_ECC_raw_daily$day <- as.numeric(data_ECC_raw_daily$day)
 
-  scotty_clean_daily <- readRDS(paste0(filepath2, "/", filepath_name4))
-  scotty_raw_daily <- readRDS(paste0(filepath2, "/", filepath_name5))
-  scotty_clean_daily$merged_name <- "Scotty Creek"
-  scotty_raw_daily$merged_name <- "Scotty Creek"
+  # scotty_clean_daily <- readRDS(paste0(filepath2, "/", filepath_name4))
+  # scotty_raw_daily <- readRDS(paste0(filepath2, "/", filepath_name5))
+  # scotty_clean_daily$merged_name <- "Scotty Creek"
+  # scotty_raw_daily$merged_name <- "Scotty Creek"
 
-  FTS_clean_daily <- readRDS(paste0(filepath, "/", filepath_name6))
-  FTS_raw_daily <- readRDS(paste0(filepath, "/", filepath_name7))
+  # FTS_clean_daily <- readRDS(paste0(filepath, "/", filepath_name6))
+  # FTS_raw_daily <- readRDS(paste0(filepath, "/", filepath_name7))
 
   newdata_clean <- dplyr::bind_rows(data_ECC_cleaned_daily, scotty_clean_daily)
   data_ECCC_FTS <- dplyr::bind_rows(data_ECCC, FTS_clean_daily)

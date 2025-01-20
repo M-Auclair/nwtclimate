@@ -15,6 +15,7 @@ locations <- c(
   rep("Fort Chipewyan", 4),
   rep("Fort Good Hope", 4),
   rep("Fort Liard", 3),
+  rep("Fort McMurray", 4),
   rep("Fort McPherson", 4),
   rep("Fort Nelson", 6),
   rep("Fort Providence", 2),
@@ -37,7 +38,7 @@ locations <- c(
   rep("Nangmagvik", 1),
   rep("Norman Wells", 3),
   rep("Paulatuk", 3),
-  rep("Peace River", 4),
+  rep("Peace River", 5),
   rep("Pelly Island", 1),
   rep("Rabbit Kettle", 1),
   rep("Sachs Harbour", 3),
@@ -47,6 +48,7 @@ locations <- c(
   rep("Tulita", 2),
   rep("Tuktoyaktuk", 6),
   rep("Tuktut Nogait", 1),
+  rep("Watson Lake", 4), #ER added
   rep("Whati", 1),
   rep("Yellowknife", 5),
   rep("Yohin", 1)
@@ -62,6 +64,7 @@ ids <- c(
   50757, 2704, 2703, 31608, # Fort Chipewyan
   27549, 1644, 1645, 53580, # Fort Good Hope
   10687, 1646, 52965, # Fort Liard
+  27216, 49490, 2519, 31288, # Fort McMurray
   52963, 1648, 1647, 1649, # Fort McPherson
   54098, 50819, 1455, 8248, 1456, 1458, # Fort Nelson
   10902, 1651, # Fort Providence
@@ -84,7 +87,7 @@ ids <- c(
   27118, # Nangmagvik
   43004, 1680, 50717, # Norman Wells
   26986, 1685, 53420, # Paulatuk
-  52258, 2770, 2772, 2774, # Peace River
+  52258, 2770, 2772, 2774, 55098, # Peace River - ER: added site ROMA to this list (55098)
   10091, # Pelly Island
   26895, # Rabbit Kettle
   10076, 1794, 53326, # Sachs Harbour
@@ -94,13 +97,14 @@ ids <- c(
   26987, 1700, 1699, 1698, 53582, 10845, # Tuktoyaktuk
   52967, 1650, # Tulita
   27626, # Tuktut Nogait
+  32293, 1615, 53339, 54198, #Watson Lake - ER: added this location
   1674, # Whati,
   55358, 51058, 1706, 27338, 45467, # Yellowknife
   1635 # Yohin
 )
 
 df_locations <- data.frame(location = locations,
-                   station_id = ids)
+                           station_id = ids)
 
 ###########################################
 

@@ -37,79 +37,6 @@ savepath <- "C:/Users/maucl/Documents/Data/R_data" # path where new file will be
   #Winter_Lake_FTS <- readxl::read_excel(paste0(path, "/Winter Lake FTS.xlsx"), col_types = c("text", "numeric", "numeric", "numeric", "numeric", "numeric","date", "numeric", "numeric", "numeric",  "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "numeric"))
   YK_Ski_Club <- readxl::read_excel(paste0(path, "/YK Ski Club.xlsx"), col_types = c("text", "numeric", "numeric", "numeric", "numeric", "numeric","date", "numeric", "numeric", "numeric",  "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "numeric"))
 }
-# change colnames of non-FTS stations
-
-colnames <- c(
-  "station_name",
-  "year",
-  "JD",
-  "month",
-  "day",
-  "hour",
-  "date",
-  "t_air",
-  "RH",
-  "total_precip",
-  "wind_sp",
-  "wind_dir",
-  "net_SW",
-  "net_LW",
-  "rn",
-  "sw_in",
-  "sr50",
-  "t_soil_1",
-  "t_soil_2",
-  "t_soil_3",
-  "t_soil_4",
-  "t_soil_5",
-  "t_soil_6",
-  "t_air_2",
-  "RH_2",
-  "t_water",
-  "t_water_2",
-  "water_depth",
-  "t_air_flag",
-  "RH_flag",
-  "rain_flag",
-  "wind_sp_flag",
-  "wind_dir_flag",
-  "sw_in_flag",
-  "sr50_flag",
-  "rn_flag",
-  "net_SW_flag",
-  "net_LW_flag",
-  "station_notes",
-  "water_depth_corr",
-  "water_depth_corr_flag",
-  "lat",
-  "lon",
-  "elev")
-colnames(BB) <- colnames
-colnames(BDL) <- colnames
-colnames(Colomac) <- colnames
-colnames(Daring_Lake) <- colnames
-colnames(Dempster85) <- colnames
-colnames(Dempster515) <- colnames
-colnames(Discovery) <- colnames
-colnames(Giant_Mine) <- colnames
-colnames(Harry) <- colnames
-colnames(Lupin) <- colnames
-colnames(Mile_222) <- colnames
-colnames(Nanisivik) <- colnames
-colnames(Peel) <- colnames
-colnames(Pocket) <- colnames
-colnames(Salmita) <- colnames
-colnames(Silver_Bear) <- colnames
-colnames(Snare_Rapids) <- colnames
-colnames(Taglu) <- colnames
-colnames(Tibbitt_muskeg) <- colnames
-colnames(Tibbit_Pine) <- colnames
-colnames(Tuktoyaktuk) <- colnames
-colnames(Walker_Bay) <- colnames
-colnames(YK_Ski_Club) <- colnames
-
-
-
 # reading in new FTS data:
 # NOTE: may need to change path for FTS files below to where they are saved on your directory
 {Daring_FTS <- readRDS(paste0(savepath, "/Daring FTS.rds"))
@@ -119,47 +46,16 @@ colnames(YK_Ski_Club) <- colnames
   Peel_FTS <- readRDS(paste0(savepath, "/Peel FTS.rds"))
   Winter_Lake_FTS <- readRDS(paste0(savepath, "/WinterLake FTS.rds"))
 
-  # apply convert_classes function pre-binding dfs (function in dependencies_functions)
-  convert_classes <- function(x) {
-    char_cols <- c("station_name",
-                   "station_notes",
-                   "t_air_flag",
-                   "RH_flag",
-                   "rain_flag",
-                   "wind_sp_flag",
-                   "wind_dir_flag",
-                   "sw_in_flag",
-                   "sr50_flag",
-                   "rn_flag",
-                   "net_SW_flag",
-                   "net_LW_flag",
-                   "station_notes",
-                   "water_depth_corr",
-                   "water_depth_corr_flag")
 
-    num_cols <- c("year","JD","month","day","hour","t_air",
-                  "RH",
-                  "total_precip",
-                  "wind_sp",
-                  "wind_dir",
-                  "net_SW",
-                  "net_LW",
-                  "rn",
-                  "sw_in",
-                  "sr50",
-                  "t_soil_1",
-                  "t_soil_2",
-                  "t_soil_3",
-                  "t_soil_4",
-                  "t_soil_5",
-                  "t_soil_6",
-                  "t_air_2",
-                  "RH_2",
-                  "t_water",
-                  "t_water_2",
-                  "water_depth",
-                  "water_depth_corr",
-                  "lat","lon","elev")
+  convert_classes_waters <- function(x) {
+
+    char_cols <- c("Station","dataflag_AT","dataflag_RH","dataflag_Rn","dataflag_WS","dataflag_WD",
+                   "dataflag_ISW","dataflag_SD","dataflag_NR","dataflag_NSW","dataflag_NLW","notes")
+
+    num_cols <- c("Year","JD","Month","Day","Hour","Air Temperature","Relative Humidity","Rainfall",
+                  "Wind Speed","Wind direction","Net SW Radiation", "Net LW Radiation","Net Radiation",
+                  "Incoming SW Radiation","Snow depth","TS_1","TS_2", "TS_3","TS_4","TS_5", "TS_6",
+                  "Air Temperature_2","Relative Humidity_2","Twater","Twater_2","DepthTW","WDep_corr")
 
     char_cols <- intersect(char_cols, names(x))
     num_cols <- intersect(num_cols, names(x))
@@ -171,12 +67,12 @@ colnames(YK_Ski_Club) <- colnames
   }
 
   # note ignore "NAs introduced by coercion" msg - due to some NA values recognized as a character "NA" instead of missing value
-  Daring_FTS <- convert_classes(Daring_FTS)
-  Harry_FTS <- convert_classes(Harry_FTS)
-  Hoarfrost_FTS <- convert_classes(Hoarfrost_FTS)
-  ITH_FTS <- convert_classes(ITH_FTS)
-  Peel_FTS <- convert_classes(Peel_FTS)
-  Winter_Lake_FTS <- convert_classes(Winter_Lake_FTS)
+  Daring_FTS <- convert_classes_waters(Daring_FTS)
+  Harry_FTS <- convert_classes_waters(Harry_FTS)
+  Hoarfrost_FTS <- convert_classes_waters(Hoarfrost_FTS)
+  ITH_FTS <- convert_classes_waters(ITH_FTS)
+  Peel_FTS <- convert_classes_waters(Peel_FTS)
+  Winter_Lake_FTS <- convert_classes_waters(Winter_Lake_FTS)
 
 
 }
@@ -265,6 +161,56 @@ colnames <- c(
   "elev")
 colnames(climatedf) <- colnames
 
+
+#create hourly values from half hourly values at Mile 222
+Mile222 <- climatedf %>%
+  dplyr::filter(station_name == "Mile222") %>%
+  dplyr::group_by(station_name, year, JD, month, day, date, hour) %>%
+  dplyr::reframe(t_air = mean(t_air, na.rm=T),
+                 RH = mean(RH, na.rm=T),
+                 total_precip = sum(total_precip, na.rm=T),
+                 wind_sp = mean(wind_sp, na.rm=T),
+                 wind_dir = mean(wind_dir, na.rm=T),
+                 net_SW = mean(net_SW, na.rm=T),
+                 net_LW = mean(net_LW, na.rm=T),
+                 rn = mean(rn, na.rm=T),
+                 sw_in = mean(sw_in, na.rm=T),
+                 sr50 = mean(sr50, na.rm=T),
+                 t_soil_1 = mean(t_soil_1, na.rm=T),
+                 t_soil_2 = mean(t_soil_2, na.rm=T),
+                 t_soil_3 = mean(t_soil_3, na.rm=T),
+                 t_soil_4 = mean(t_soil_4, na.rm=T),
+                 t_soil_5 = mean(t_soil_5, na.rm=T),
+                 t_soil_6 = t_soil_6,
+                 t_air_2 = mean(t_air_2, na.rm=T),
+                 RH_2 = mean(RH_2, na.rm=T),
+                 t_water = mean(t_water, na.rm = T),
+                 t_water_2 = t_water_2,
+                 water_depth = water_depth,
+                 t_air_flag = t_air_flag,
+                 RH_flag = RH_flag,
+                 rain_flag = rain_flag,
+                 wind_sp_flag = wind_sp_flag,
+                 wind_dir_flag = wind_dir_flag,
+                 sw_in_flag = sw_in_flag,
+                 sr50_flag = sr50_flag,
+                 rn_flag = rn_flag,
+                 net_SW_flag = net_SW_flag,
+                 net_LW_flag = net_LW_flag,
+                 notes = notes,
+                 water_depth_corr = water_depth_corr,
+                 lat = lat,
+                 lon = lon,
+                 elev = elev)
+
+#bringing edited Mile222 data back into climate df
+Mile222 <- Mile222 %>%
+  dplyr::relocate(date, .after = hour)
+Mile222 <- unique(Mile222)
+climatedf <- climatedf %>%
+  dplyr::filter(station_name != "Mile222")
+climatedf <- rbind(climatedf, Mile222)
+
 #Fill in Date, JD and month-year values using lubridate
 climatedf$date = dplyr::if_else(is.na(climatedf$date), as.Date(climatedf$JD-1, origin = paste0(climatedf$year, "-01-01")), as.Date(climatedf$date))
 climatedf$month =dplyr::if_else(is.na(climatedf$month), lubridate::month(climatedf$date), climatedf$month)
@@ -299,7 +245,7 @@ climatedf <- climatedf %>%
   dplyr::filter(!is.na(hour) & !is.na(date))
 
 # remove trailing zeros from hour col, replace 24 with 0
-climatedf$hour <- ifelse(climatedf$hour == "0", climatedf$hour, sub("0+$", "", climatedf$hour))
+#climatedf$hour <- ifelse(climatedf$hour == "0", climatedf$hour, sub("0+$", "", climatedf$hour))
 climatedf$hour[climatedf$hour == "24"] <- "0"
 
 # Fix hour column
@@ -312,5 +258,6 @@ climatedf_flagged <- flag_data(climatedf)
 
 # save file in savepath defined above
 saveRDS(climatedf, paste0(savepath, "/allstations_flagged_raw.rds"))
+
 
 

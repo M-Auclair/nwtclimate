@@ -2,9 +2,10 @@
 
 `%>%` <- magrittr::`%>%`
 
-file_path <- "C:/Users/maucl/Documents/Data/R_data"
-file_name <- "allstations_flagged_raw.rds"
-savepath <- "C:/Users/maucl/Documents/Data/ClimateDB/"
+# file_path <- "C:/Users/maucl/Documents/Data/R_data"
+# file_name <- "allstations_flagged_raw.rds"
+# savepath <- "C:/Users/maucl/Documents/Data/ClimateDB/"
+
 climatedf <- readRDS(paste0(file_path, "/", file_name ))
 
 # remove Rain_check_flag column if present
