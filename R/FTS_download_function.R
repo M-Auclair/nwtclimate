@@ -1,6 +1,8 @@
 #Get FTS data using API connection and fts360 credentials
 #enter email and password before use
 
+#test push changes
+
 library(httr)
 library(jsonlite)
 library(lubridate)
@@ -10,8 +12,8 @@ library(purrr)
 downloadFTS = function (start_date = "2025-06-29T00:00:00Z",
                         end_date = "2025-07-16T00:00:00Z",
                         output_date = "July16_2025"){
-  
-  
+
+
   # Step 1: Authenticate
   login_response <- POST(
     url = "https://fts360api.com/auth/users/authenticate",
@@ -22,14 +24,14 @@ downloadFTS = function (start_date = "2025-06-29T00:00:00Z",
     encode = "json",
     accept_json()
   )
-  
+
   login_content <- content(login_response, as = "parsed")
   token <- login_content$access_token
   if (is.null(token)) stop("Login failed. Check credentials.")
-  
+
   # Step 2: Define download parameters for each group
   station_groups <- list(
-    
+
     dehchostations = list(
       stationIds = c("6160c6b164699463087279d1",
                      "6160c6b164699463087279ec",
@@ -97,7 +99,7 @@ downloadFTS = function (start_date = "2025-06-29T00:00:00Z",
         "649dca92b10bd1051fa02cc9"
       )
     ),
-    
+
     sahtustations = list(
       stationIds = c( "6160c6b164699463087279e4",
                       "6160c6b164699463087279e7",
@@ -158,7 +160,7 @@ downloadFTS = function (start_date = "2025-06-29T00:00:00Z",
         "649dc9a650647525a1931d66"
       )
     ),
-    
+
     southslavestations = list(stationIds = c("6160c6b16469946308727a04",
                                              "6160c6b164699463087279e1",
                                              "6160c6b164699463087279df",
@@ -285,7 +287,7 @@ downloadFTS = function (start_date = "2025-06-29T00:00:00Z",
                                                                                      "649dcd01b10bd1051fa0329d",
                                                                                      "649dcd01b10bd1051fa032a0",
                                                                                      "649dcd01b10bd1051fa032a8")),
-    
+
     # ubicomstations = list(stationIds = c("6477ac5579ced27eb18b876b",
     #                                      "6477ac4e684ae637e57ae13a",
     #                                      "6671ed68375e9543b1f93d47",
@@ -639,7 +641,7 @@ downloadFTS = function (start_date = "2025-06-29T00:00:00Z",
     #                                                    "6671edd5418b0c4abd5902e8",
     #                                                    "6671edd5418b0c4abd5902da",
     #                                                    "6671edd5418b0c4abd5902df")),
-    
+
     northslavestations = list(stationIds = c( "6160c6b86469946308728061",
                                               "666c9015375e9543b1f93d46",
                                               "6160c6b164699463087279c6",
@@ -723,7 +725,7 @@ downloadFTS = function (start_date = "2025-06-29T00:00:00Z",
                                                                                       "666c96498ac1c20708381ac0",
                                                                                       "666c96498ac1c20708381ac1",
                                                                                       "666c96498ac1c20708381ac3")),
-    
+
     watersstations = list(stationIds = c("6160c6b164699463087279f1",
                                          "6160c6b16469946308727a01",
                                          "6160c6b164699463087279f5",
@@ -789,7 +791,7 @@ downloadFTS = function (start_date = "2025-06-29T00:00:00Z",
                                                                                  "649dc02950647525a192e868",
                                                                                  "649dc02950647525a192e847",
                                                                                  "649dc02950647525a192e862")),
-    
+
     mobilestations = list(stationIds = c("66abaf6a00e01a5a0ce79172",
                                          "6685893700e01a5a0ce79130"), fields = c("668589387e5cf74a1a631f85",
                                                                                  "668589387e5cf74a1a631f9c",
@@ -803,7 +805,7 @@ downloadFTS = function (start_date = "2025-06-29T00:00:00Z",
                                                                                  "66abaf6b6857502d0296419f",
                                                                                  "66abaf6b6857502d0296418c",
                                                                                  "66abaf6b6857502d02964197")),
-    
+
     inuvikstations = list(stationIds = c("6477ac69684ae637e57ae14a",
                                          "6160c6b164699463087279ca",
                                          "6160c6b164699463087279cd",
@@ -838,7 +840,7 @@ downloadFTS = function (start_date = "2025-06-29T00:00:00Z",
                                                                                  "649dcf0b50647525a193385b",
                                                                                  "649dcf0b50647525a193385e",
                                                                                  "649dcf0b50647525a1933866")),
-    
+
     highwaysstations = list(stationIds = c("6160c6b8646994630872810f",
                                            "64d2c067684ae637e57ae863",
                                            "6160c6b8646994630872810a",
@@ -873,19 +875,19 @@ downloadFTS = function (start_date = "2025-06-29T00:00:00Z",
                                                                                    "64ee5b36552e756fb87f0825",
                                                                                    "64ee5b36552e756fb87f0831",
                                                                                    "64ee5b36552e756fb87f0826"))
-    
+
   )
-  
-  
+
+
   # Step 3: Set date range and output date string
   # start_date <- "2025-06-29T00:00:00Z"
   # end_date <- "2025-06-30T00:00:00Z"
   # output_date <- format(ymd("2025-06-30"), "%B%d_%Y")  # "June30_2025"
-  
+
   # Step 4: Loop through each group and download
   for (group_name in names(station_groups)) {
     group <- station_groups[[group_name]]
-    
+
     download_body <- list(
       startDate = start_date,
       endDate = end_date,
@@ -893,7 +895,7 @@ downloadFTS = function (start_date = "2025-06-29T00:00:00Z",
       fields = group$fields,
       stationIds = group$stationIds
     )
-    
+
     response <- POST(
       url = "https://fts360api.com/data/v1/agencies/420/records/csv",
       body = toJSON(download_body, auto_unbox = TRUE),
@@ -904,7 +906,7 @@ downloadFTS = function (start_date = "2025-06-29T00:00:00Z",
         Accept = "text/csv"
       )
     )
-    
+
     if (status_code(response) == 200) {
       file_name <- paste0("ftsdownload_", group_name, "_", output_date, ".csv")
       writeBin(content(response, "raw"), file_name)
@@ -914,39 +916,39 @@ downloadFTS = function (start_date = "2025-06-29T00:00:00Z",
       print(content(response, as = "text"))
     }
   }
-  
+
   # merge data together
   # list all the matching CSV files
   csv_files <- list.files(pattern = paste0("^ftsdownload_.*_", output_date, "\\.csv$"))
-  
+
   # Read them in and tag them with 'type' from the filename
   #replace /// values with NA
   merged_data <- map_dfr(csv_files, function(file) {
     df <- read.csv(file)
-    
+
     # Replace placeholders with NA
     df[df == "/////"] <- NA
     df[df == "///"] <- NA
-    
+
     # Define target columns for numeric coercion
     all_numeric_cols <- c("Temp", "Rh", "Rn_1", "PYR", "Wspd", "Dir", "SD", "TS1", "TS2", "TS3")
-    
+
     # Only use columns that exist in the current dataframe
     cols_present <- intersect(all_numeric_cols, names(df))
-    
+
     # Coerce only those to numeric
     df[cols_present] <- lapply(df[cols_present], function(col) {
       suppressWarnings(as.numeric(col))
     })
-    
+
     df
   })
-  
+
   #Adjust timestamp for timezone UTC -> UTC-6
   # Format time column if needed
   merged_data <- merged_data %>%
     dplyr::mutate(Date = as.POSIXct(Date, format = "%Y-%m-%dT%H:%M:%OSZ", tz = "UTC") - lubridate::hours(6))  # Adjust column name
-  
+
   #add other date/time columns
   merged_data["cd_year"] <- lubridate::year(merged_data$Date)
   merged_data["JD"] <- lubridate::yday(merged_data$Date)
@@ -954,13 +956,13 @@ downloadFTS = function (start_date = "2025-06-29T00:00:00Z",
   merged_data["cd_day"] <- lubridate::day(merged_data$Date)
   merged_data["cd_hour"] <- lubridate::hour(merged_data$Date)
   merged_data["cd_time"] <- base::sprintf("%02d:00",merged_data$cd_hour)
-  
+
   #change station names to match database - add "FTS" at the end
   sitename <- unique(merged_data$Station.name)
   for (i in sitename){
     merged_data$Station.name[merged_data$Station.name == i]<- paste0(i, " FTS")
   }
-  
+
   #change other station names
   merged_data$Station.name[merged_data$Station.name == "Daring Lake FTS"] <- "Daring FTS"
   merged_data$Station.name[merged_data$Station.name == "Fort MacPherson FTS"] <- "Fort McPherson FTS"
@@ -971,7 +973,7 @@ downloadFTS = function (start_date = "2025-06-29T00:00:00Z",
   merged_data$Station.name[merged_data$Station.name == "Wha Ti FTS"] <- "Whati FTS"
   merged_data$Station.name[merged_data$Station.name == "Buffalo  Junction FTS"] <- "Buffalo Junction FTS"
   merged_data$Station.name[merged_data$Station.name == "Talston River Dam FTS"] <- "Taltson River Dam FTS"
-  
+
   #Change column names
   merged_data <- merged_data %>%
     dplyr::rename("STATION_NAME" = "Station.name",
@@ -986,40 +988,40 @@ downloadFTS = function (start_date = "2025-06-29T00:00:00Z",
                   "T_SOIL_1_C"="TS1",
                   "T_SOIL_2_C"="TS2",
                   "T_SOIL_3_C"="TS3")
-  
+
   #flag data and add additional flag columns as needed
   #flag function - adjusted slightly for merged_data dataframe
-  
+
   # Data flagging function
   flag_data = function (df){
-    
+
     df$rain_flag <- dplyr::if_else((df$T_AIR_HIGH_C<(-0.1)&df$RAIN_MM>0|df$RAIN_MM<0), "QC", NA)
     df$wind_sp_flag <- dplyr::if_else((df$WIND_SP_MS < 0|(zoo::rollapply(df$WIND_SP_MS, width = 5, FUN = sd, fill = NA)<0.001)), "QC", NA)
     df$wind_dir_flag <- dplyr::if_else((df$WIND_DIR_DEG < 0|df$WIND_DIR_DEG > 360|df$WIND_SP_MS <=0 | (zoo::rollapply(df$WIND_DIR_DEG, width = 5, FUN = sd, fill = NA)<0.1)), "QC", NA)
     df$RH_flag <- dplyr::if_else((df$RH_HIGH_PER<0|df$RH_HIGH_PER>100), "QC", NA)
     df$t_air_high_flag <- dplyr::if_else((df$T_AIR_HIGH_C<(-60)|df$T_AIR_HIGH_C>50), "QC", NA)
     df$sw_in_flag <- dplyr::if_else((df$SW_IN_WM2<0), "QC", NA)
-    
+
     df <- dplyr::arrange(df, STATION_NAME, cd_year, JD)
     df  <- dplyr::group_by(df, STATION_NAME, cd_year)
     df  <- dplyr::mutate(df, year.start.JD = min(JD, na.rm=TRUE))
     df  <- dplyr::mutate(df, first.above.zero = head(c(JD[c(T_AIR_HIGH_C[-length(T_AIR_HIGH_C)] > 0, TRUE)]), 1))
     df$first.above.zero[df$first.above.zero == df$year.start.JD] <- NA
-    
+
     df  <- dplyr::arrange(.data = df , STATION_NAME, cd_year, JD)
     df  <- dplyr::group_by(.data = df , STATION_NAME, cd_year)
     df  <- dplyr::mutate(.data = df , rollmeanAT = zoo::rollmean(T_AIR_HIGH_C, k=720, fill=NA))
     df$rain_flag <- dplyr::if_else((df$RAIN_MM>0& df$first.above.zero==df$JD)| (df$RAIN_MM>0& df$first.above.zero+1==df$JD)| (df$T_AIR_HIGH_C>0&df$rollmeanAT<0&df$RAIN_MM>0), "QC_PSM", df$rain_flag)
-    
+
     drops <- c("rollmeanAT","first.above.zero", "year.start.JD")
     df <- df[ , !(names(df) %in% drops)]
-    
+
     return(df)
-    
+
   }
-  
+
   merged_data <- flag_data(merged_data)
-  
+
   #add additional flag columns
   new_flag_cols <- c("sr50_flag",
                      "t_soil_1_flag",
@@ -1034,11 +1036,11 @@ downloadFTS = function (start_date = "2025-06-29T00:00:00Z",
                      "t_water_2_flag",
                      "water_depth_flag",
                      "water_depth_corr_flag")
-  
+
   merged_data[,new_flag_cols] <- NA
-  
+
   merged_data<<-merged_data
-  
+
 }
 
 #get data from yesterday until today's date at midnight
