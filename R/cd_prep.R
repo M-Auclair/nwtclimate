@@ -1,12 +1,21 @@
 # Prep data for Climate DB
+library(dplyr)
 
 `%>%` <- magrittr::`%>%`
 
-# file_path <- "C:/Users/maucl/Documents/Data/R_data"
-# file_name <- "allstations_flagged_raw.rds"
-# savepath <- "C:/Users/maucl/Documents/Data/ClimateDB/"
+source("R/dependencies_functions.R")
 
-climatedf <- readRDS(paste0(file_path, "/", file_name ))
+user <- paste0("C:/Users/", tolower(Sys.getenv("USERNAME")))
+
+file_path <- paste0(user, "/Documents/R_scripts/Packages/nwtclimate/data/")
+dir.create(paste0(file_path, "separated/"))
+savepath <- paste0(user, "/Documents/R_scripts/Packages/nwtclimate/data/separated/")
+file_name <- "allstations_flagged.rds"
+climatedf <- readRDS(paste0(file_path, "/", file_name))
+
+#make sure rain check flags are transitioned to "rain_flag"
+climatedf <- climatedf %>%
+  dplyr::mutate(rain_flag = ifelse(!is.na(Rain_check_flag) & Rain_check_flag == "QC", "QC_PSM", rain_flag))
 
 # remove Rain_check_flag column if present
 climatedf <- climatedf[, !names(climatedf) %in% c("Rain_check_flag")]
@@ -43,8 +52,8 @@ climatedf <- climatedf %>%
     t_water_2_C = t_water_2,
     water_depth_m = water_depth,
     water_depth_corr_m = water_depth_corr,
-    t_air_high_flag = t_air_flag,
-    RH_high_flag = RH_flag,
+    t_air_flag = t_air_flag,
+    RH_flag = RH_flag,
     wind_sp_flag = wind_sp_flag,
     wind_dir_flag = wind_dir_flag,
     net_SW_flag = net_SW_flag,
@@ -61,8 +70,8 @@ new_flag_cols <- c("t_soil_1_flag",
                    "t_soil_4_flag",
                    "t_soil_5_flag",
                    "t_soil_6_flag",
-                   "t_air_low_flag",
-                   "RH_low_flag",
+                   "t_air_2_flag",
+                   "RH_2_flag",
                    "t_water_flag",
                    "t_water_2_flag",
                    "water_depth_flag",
@@ -72,7 +81,6 @@ climatedf[,new_flag_cols] <- NA
 
 # columns to include in all variable dfs
 additional_columns <- c("station_name",
-                        "station_notes",
                         "cd_year",
                         "JD",
                         "cd_month",
@@ -106,8 +114,8 @@ main_columns <- c(
 
 # variable flags
 flag_col <- c(
-  "t_air_high_flag",
-  "RH_high_flag",
+  "t_air_flag",
+  "RH_flag",
   "rain_flag",
   "wind_sp_flag",
   "wind_dir_flag",
@@ -122,15 +130,27 @@ flag_col <- c(
   "t_soil_4_flag",
   "t_soil_5_flag",
   "t_soil_6_flag",
-  "t_air_low_flag",
-  "RH_low_flag",
+  "t_air_2_flag",
+  "RH_2_flag",
   "t_water_flag",
   "t_water_2_flag",
   "water_depth_flag",
   "water_depth_corr_flag"
 )
 
-  # apply split_df function to create one df per variable
+# make sure stations are named properly
+climatedf$station_name[climatedf$station_name == "Winter Lake"] <- "Winter Lake FTS"
+climatedf$station_name[climatedf$station_name == "Tuktoyaktuk"] <- "Tuk"
+climatedf$station_name[climatedf$station_name == "Tibbitt"] <- "Tibbitt muskeg"
+
+#option to save file
+#saveRDS(climatedf, paste0(file_path, "/allstations_flagged_raw_DBcompatible.rds"))
+
+#remove duplicates
+climatedf <- climatedf %>%
+  distinct(station_name, cd_year, cd_month, cd_day, cd_time, .keep_all = TRUE)
+
+# apply split_df function to create one df per variable
 # note: split_df function in dependencies_functions
   climatedf_list <- split_df(
     df = climatedf,
