@@ -925,6 +925,12 @@ downloadFTS = function (start_date = "2025-06-29T00:00:00Z",
   #replace /// values with NA
   merged_data <- map_dfr(csv_files, function(file) {
     df <- read.csv(file)
+    
+    # Skip empty files (0 rows or all logical columns)
+    if (nrow(df) == 0 || all(sapply(df, is.logical))) {
+      cat("⚠️  Skipping empty file:", file, "\n")
+      return(NULL)  # This will be filtered out by map_dfr
+    }
 
     # Replace placeholders with NA
     df[df == "/////"] <- NA
@@ -1021,6 +1027,9 @@ downloadFTS = function (start_date = "2025-06-29T00:00:00Z",
   }
 
   merged_data <- flag_data(merged_data)
+
+  #adjust wind speed units from km hr-1 to m s-1
+  merged_data$WIND_SP_MS = dplyr::if_else(!is.na(merged_data$WIND_SP_MS),  merged_data$WIND_SP_MS/3.6, merged_data$WIND_SP_MS, missing = merged_data$WIND_SP_MS)
 
   #add additional flag columns
   new_flag_cols <- c("sr50_flag",
