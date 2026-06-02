@@ -4,20 +4,32 @@
 \alias{nt_merge}
 \title{Merge climate datasets together}
 \usage{
-nt_merge(filepath, stitch_input_file, orig_input_file, output_file)
+nt_merge(
+  filepath,
+  stitch_input_file,
+  orig_input_file,
+  output_file,
+  extension = ".rds"
+)
 }
 \arguments{
-\item{filepath}{Character. The filepath to find input files and save output files}
+\item{filepath}{Character. Required. Writable directory containing
+\code{paste0(input_file, extension)} and where output will be written.}
 
-\item{stitch_input_file}{Character. The file containing the stitched input file}
+\item{stitch_input_file}{Character. RDS base name (no path, no extension). Standard pipeline:
+\code{"ECCC_Climate_Data_Stitched"}.}
 
-\item{orig_input_file}{Character. The file containing the original input file}
+\item{orig_input_file}{Character. RDS base name (no path, no extension). Standard pipeline:
+\code{"ECCC_Climate_Data_Updated"}.}
 
-\item{output_file}{Character. The name of the final output file}
+\item{output_file}{Character. RDS base name (no path, no extension). Standard pipeline:
+\code{"ECCC_Climate_Data_Merged"}.}
+
+\item{extension}{Character. File extension including dot. Default \code{".rds"}.}
 }
 \value{
-A dataframe of a merged dataset
+A dataframe of a merged dataset and writes RDS to disk
 }
 \description{
-Produce a map of all station data
+Merge climate datasets together
 }

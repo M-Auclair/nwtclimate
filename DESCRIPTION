@@ -2,11 +2,21 @@ Package: nwtclimate
 Type: Package
 Title: NWT stitched and merged climate dataset
 Version: 0.0.1.0
-Author: Ryan Connon
+Authors@R: c(
+  person("Ryan", "Connon", role = "aut"),
+  person("Emma", "Riley", role = "aut"),
+  person("Maude", "Auclair", role = c("aut", "cre"), email = "mauclair@wlu.ca")
+  )
+Description: Download, update, filter, stitch, and merge ECCC climate data for NWT.
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 Imports: 
-    dplyr
-
-
+    dplyr,
+    lubridate,
+    weathercan,
+    fasstr
+Remotes:
+    ropensci/weathercan
+Depends: R (>= 4.5.0)

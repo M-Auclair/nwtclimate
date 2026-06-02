@@ -12,7 +12,7 @@ locations <- c(
   rep("Colville Lake", 2),
   rep("Deadmen Valley", 1),
   rep("Deline", 3),
-  rep("Fort Chipewyan", 4),
+  rep("Fort Chipewyan", 5),
   rep("Fort Good Hope", 4),
   rep("Fort Liard", 3),
   rep("Fort McMurray", 4),
@@ -61,7 +61,7 @@ ids <- c(
   10867, 52899, # Colville Lake
   31187, # Deadmen Valley
   27749, 6850, 52964, # Deline
-  50757, 2704, 2703, 31608, # Fort Chipewyan
+  50757, 2704, 2703, 31608, 48975, # Fort Chipewyan
   27549, 1644, 1645, 53580, # Fort Good Hope
   10687, 1646, 52965, # Fort Liard
   27216, 49490, 2519, 31288, # Fort McMurray
@@ -152,7 +152,27 @@ df_locations <- data.frame(location = locations,
 # data <- dplyr::bind_rows(data, df)
 # saveRDS(data, file = paste0(data_path, updated_data, extension))
 #
+
+#How to update data sheet with data from additional stations
+
+# weathercan::stations_search("Fort Chipewyan", interval = "day")
+# #list current stations and additional station ID
+# ids <- c(50757, 2704, 2703, 31608, 48975)
 #
+# df <- weathercan::weather_dl(station_id = ids,
+#                              start = "1900-01-01",
+#                              end = as.Date(Sys.Date()),
+#                              interval = "day")
+#
+# df[,12] <- as.numeric(unlist(df[,12]))
+# df[,13] <- as.numeric(unlist(df[,13]))
+# df[,14] <- as.numeric(unlist(df[,14]))
+#
+# data <- readRDS(paste0(data_path, updated_data, extension)) %>%
+#   dplyr::filter(!grepl("FORT CHIPEWYAN", station_name, ignore.case = TRUE))
+#
+# data <- dplyr::bind_rows(data, df)
+# saveRDS(data, file = paste0(data_path, updated_data, extension))
 
 ############################################################################################
 waterssites = c("Blueberry",
@@ -190,4 +210,3 @@ waterssites = c("Blueberry",
                 "Ninelin Lake",
                 "Forestry Lake",
                 "Wrigley")
-
