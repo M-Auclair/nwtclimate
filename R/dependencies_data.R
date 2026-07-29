@@ -94,8 +94,8 @@ ids <- c(
   10880, # Sambaa Ke
   10598, # Thomsen River
   27620, # Trail Valley
-  26987, 1700, 1699, 1698, 53582, 10845, # Tuktoyaktuk
   52967, 1650, # Tulita
+  26987, 1700, 1699, 1698, 53582, 10845, # Tuktoyaktuk
   27626, # Tuktut Nogait
   32293, 1615, 53339, 54198, #Watson Lake - ER: added this location
   1674, # Whati,
