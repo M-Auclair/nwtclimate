@@ -9,7 +9,7 @@
 ###################################################################################################
 
 # Manually call tidyhydat.ws into active library
-library(tidyhydat.ws)
+#library(tidyhydat.ws)
 
 ###################################################################################################
 
@@ -133,6 +133,7 @@ flag_data = function (df){
   df$RH_flag <- dplyr::if_else((df$RH<0|df$RH>100), "QC", NA)
   df$t_air_flag <- dplyr::if_else((df$t_air<(-60)|df$t_air>50), "QC", NA)
   df$sw_in_flag <- dplyr::if_else((df$sw_in<0), "QC", NA)
+  df$baro_pressure_flag <- dplyr::if_else((df$baro_pressure_mbar<0), "QC", NA)
 
   df <- dplyr::arrange(df, station_name, year, JD)
   df  <- dplyr::group_by(df, station_name, year)

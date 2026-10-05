@@ -1,10 +1,18 @@
 # Function to split updated homogenized data into rds file for each site
 
+# Set file pathways
+user <- paste0("C:/Users/", tolower(Sys.getenv("USERNAME")), "/Documents/")
+
+package_path <- paste0(user, "R_Scripts/Packages/")
+nwtclimate_path <- paste0(package_path, "nwtclimate/")
+data_path <- paste0(nwtclimate_path, "data/")
+savepath <- data_path
+
+original_data = "ECCC_Climate_Data"
+merged_data = paste0(original_data, "_Merged")
+extension <- ".rds"
+
 df <- readRDS(paste0(data_path, merged_data, extension))
-
-
-# Function to split & save data by site
-#savepath <- "C:/Users/maucl/Documents/R_Scripts/Packages/nwtclimate/data/"
 
 split_sites <- function(df, data_path = "./") {
 
@@ -77,7 +85,7 @@ split_sites <- function(df, data_path = "./") {
   return(split_dfs)
 }
 
-#split_dfs <- split_sites(df, data_path = data_path)
+split_dfs <- split_sites(df, data_path = data_path)
 
 
 # function to bring in data - function is in 'dependencies_functions.R'

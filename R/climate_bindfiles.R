@@ -39,13 +39,14 @@ savepath <- "C:/Users/maucl/Documents/Data/R_data" # path where new file will be
 }
 # reading in new FTS data:
 # NOTE: may need to change path for FTS files below to where they are saved on your directory
-{Daring_FTS <- readRDS(paste0(savepath, "/Daring FTS.rds"))
-  Harry_FTS <- readRDS(paste0(savepath, "/Harry FTS.rds"))
-  Hoarfrost_FTS <- readRDS(paste0(savepath, "/Hoarfrost FTS.rds"))
-  ITH_FTS <- readRDS(paste0(savepath, "/ITH FTS.rds"))
-  Peel_FTS <- readRDS(paste0(savepath, "/Peel FTS.rds"))
-  Winter_Lake_FTS <- readRDS(paste0(savepath, "/WinterLake FTS.rds"))
+# {Daring_FTS <- readRDS(paste0(savepath, "/Daring FTS.rds"))
+#   Harry_FTS <- readRDS(paste0(savepath, "/Harry FTS.rds"))
+#   Hoarfrost_FTS <- readRDS(paste0(savepath, "/Hoarfrost FTS.rds"))
+#   ITH_FTS <- readRDS(paste0(savepath, "/ITH FTS.rds"))
+#   Peel_FTS <- readRDS(paste0(savepath, "/Peel FTS.rds"))
+#   Winter_Lake_FTS <- readRDS(paste0(savepath, "/WinterLake FTS.rds"))
 
+Daring_FTS <- read.csv("C:/Users/Emma_Gregory/Documents/NT_Hydrology/Abiotic Monitoring/Data/raw/forDB/FTS/Daring Lake-2026-5-4-8-58-45.csv")
 
   convert_classes_waters <- function(x) {
 
@@ -67,15 +68,15 @@ savepath <- "C:/Users/maucl/Documents/Data/R_data" # path where new file will be
   }
 
   # note ignore "NAs introduced by coercion" msg - due to some NA values recognized as a character "NA" instead of missing value
-  Daring_FTS <- convert_classes_waters(Daring_FTS)
-  Harry_FTS <- convert_classes_waters(Harry_FTS)
-  Hoarfrost_FTS <- convert_classes_waters(Hoarfrost_FTS)
-  ITH_FTS <- convert_classes_waters(ITH_FTS)
-  Peel_FTS <- convert_classes_waters(Peel_FTS)
-  Winter_Lake_FTS <- convert_classes_waters(Winter_Lake_FTS)
+  # Daring_FTS <- convert_classes_waters(Daring_FTS)
+  # Harry_FTS <- convert_classes_waters(Harry_FTS)
+  # Hoarfrost_FTS <- convert_classes_waters(Hoarfrost_FTS)
+  # ITH_FTS <- convert_classes_waters(ITH_FTS)
+  # Peel_FTS <- convert_classes_waters(Peel_FTS)
+  # Winter_Lake_FTS <- convert_classes_waters(Winter_Lake_FTS)
 
 
-}
+
 #Binding the rows from these files together:
 climatedf<-dplyr::bind_rows(BB,
                             BDL,
@@ -222,6 +223,8 @@ climatedf$hour = dplyr::if_else(is.na(climatedf$hour), lubridate::hour(climatedf
 #remove -6999 or -9999 values
 NANvalues = c(-6999, 6999, -99999, "NULL")
 #climatedf[, 8:28][climatedf[, 8:28] %in% NANvalues] <- NA #takes too long to run
+climatedf$t_air[climatedf$t_air %in% NANvalues] <- NA
+climatedf$total_precip[climatedf$total_precip %in% NANvalues] <- NA
 climatedf$t_water[climatedf$t_water %in% NANvalues] <- NA
 climatedf$RH[climatedf$RH %in% NANvalues] <- NA
 climatedf$wind_dir[climatedf$wind_dir %in% NANvalues] <- NA
@@ -235,29 +238,42 @@ climatedf$t_soil_3 [climatedf$t_soil_3 %in% NANvalues] <- NA
 climatedf$t_soil_4 [climatedf$t_soil_4 %in% NANvalues] <- NA
 climatedf$water_depth[climatedf$water_depth %in% NANvalues] <- NA
 
+FTS_stns = c("Daring FTS",
+             "Harry FTS",
+             "Hoarfrost FTS",
+             "ITH FTS",
+             "Peel FTS",
+             "Winter Lake")
+
+#change FTS wind speed values from km hr-1 to m s-1
+climatedf$wind_sp = dplyr::if_else(!is.na(climatedf$wind_sp)& climatedf$station_name %in% FTS_stns,  climatedf$wind_sp/3.6, climatedf$wind_sp, missing = climatedf$wind_sp)
+
+#change inc SW values for certain stations
+SW_unit_stns <- c("Salmita", "Daring Lake", "Lupin", "Nanisivik", "Walker Bay", "Tibbitt Pine")
+climatedf$sw_in = dplyr::if_else(!is.na(climatedf$sw_in)& climatedf$station_name %in% SW_unit_stns,  climatedf$sw_in * 1000, climatedf$sw_in, missing = climatedf$sw_in)
 
 # flag data & prep for climate db
-# remove any columns with with NA or blank colname
-climatedf <- climatedf %>%
-  dplyr::select(which(colnames(.) != "" & !is.na(colnames(.))))
 # remove Walker Bay & other rows of NAs
 climatedf <- climatedf %>%
-  dplyr::filter(!is.na(hour) & !is.na(date))
+  dplyr::filter((is.na(hour)==FALSE & is.na(date) == FALSE))
 
-# remove trailing zeros from hour col, replace 24 with 0
-#climatedf$hour <- ifelse(climatedf$hour == "0", climatedf$hour, sub("0+$", "", climatedf$hour))
-climatedf$hour[climatedf$hour == "24"] <- "0"
+# remove trailing zeros from hour col
+#climatedf$hour <- ifelse(climatedf$hour == "0", climatedf$hour, sub("0+$", "", climatedf$hour)) # this removes 0's behind hour 20, making them hour 2
+climatedf$hour[climatedf$hour == 24] <- 0
 
-# Fix hour column
-climatedf$hour <- paste0(sprintf("%02d", as.integer(climatedf$hour)), ":00")
+# Hour & Time columns
+climatedf$time <- lubridate::ymd_hms(base::paste(climatedf$date,base::sprintf("%02d:00:00",climatedf$hour)))
 climatedf$hour <- base::sprintf("%02d:00", climatedf$hour)
+climatedf <- climatedf[, !names(climatedf) %in% c("time")]
 
+#Bring in QAQC df (for manual QAQC melting snow in tipping bucket)
+file_path <- "C:/Users/emma_gregory/Documents/NT_Hydrology/Abiotic Monitoring/Data/cleaned"
+file_name <- "QAQCraindf.rds"
+QAQCraindf<- readRDS(paste0(file_path, "/", file_name ))
 
 # note flag data function is in "dependencies_functions.R"
-climatedf_flagged <- flag_data(climatedf)
+climatedf_flagged <- flag_data(climatedf, QAQCraindf=QAQCraindf) #added this dataframe to flag QAQC'd data
 
-# save file in savepath defined above
-saveRDS(climatedf, paste0(savepath, "/allstations_flagged_raw.rds"))
-
-
-
+# save file
+newpath <- "C:/Users/emma_riley/Documents/R_scripts/Packages/nwtclimate/data/"
+saveRDS(climatedf_flagged, paste0(newpath, "/allstations_flagged.rds")) #changed climatedf to climatedf_flagged here

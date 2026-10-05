@@ -171,4 +171,16 @@ for (df_name in names(climatedf_list)) {
   cat("df", df_name, "saved as", filename, "\n")
 }
 
+#option to save by parameter then by site, which is useful for loading smaller batches of data
+dir.create(paste0(savepath, "bysite/"))
+savepath2<-paste0(savepath, "bysite/")
 
+for (df_name in names(climatedf_list)) {
+  df <- climatedf_list[[df_name]]
+  for(station in unique(df$station_name)){
+    df_2 <- df[df$station_name == station, ]
+    filename <- paste0(savepath, df_name, station, ".csv")
+    write.csv(df_2, file = filename, row.names = FALSE)
+  }
+
+}
