@@ -21,7 +21,7 @@ This branch is a **snapshot of the code GNWT (ECC, NT Hydrology) runs operationa
 1. On GitHub, switch the branch dropdown from **main** to **gnwt-operational**, then **Code → Download ZIP**.
 2. Unzip, and rename the folder to exactly `nwtclimate`. Put it at:
    `C:/Users/<you>/Documents/R_Scripts/Packages/nwtclimate/`
-3. Copy the large `.rds` data files (H: drive / USB, see *R coding session – instructions.docx*) into `nwtclimate/data/`. They are too big for GitHub.
+3. Check that the `data/` folder (the ECCC `.rds` files) is there. It comes with the ZIP, so there is nothing extra to copy.
 4. **Only if you run the climate database load or FTS scripts:** copy the `operational_scripts/` folder to
    `C:/Users/<you>/Documents/R_Scripts/Packages/nwtclimate_local/R/`
    That's where `Climate_data_load_how_to.md` expects them.
