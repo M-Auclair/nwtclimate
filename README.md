@@ -64,7 +64,6 @@ FTS_PWD=<FTS account password>
 | `climate_stn_data_convert.R` | Step A of the climate load: logger Excel → station CSVs |
 | `climate_data_update.R` | Step B: bind, clean and flag all stations → `allstations_flagged_<year>.rds` |
 | `cd_prep.R` | Step C: per-variable CSVs for Data Express upload |
-| `climate_readonly_connection.R` | Test connection to ECC_CLIMATE (read-only) |
 | `Climate_fix_CD_TIME_duplicates.R`, `FTS_fix_duplicates_2026.R` | One-off database fixes (CLIMATE_EDIT). **Don't run without Emma.** |
 | `FTS_download*.R`, `FTS_*` | FTS station download/upload. Normally automated on the GNWT server, so don't run these manually |
 | `map_rain_realtime.R`, `map_station_data.R`, `climate_stn_map.R` | Maps of station data |
