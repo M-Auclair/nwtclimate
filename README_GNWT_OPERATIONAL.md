@@ -4,6 +4,7 @@ This branch is a **snapshot of the code GNWT (ECC, NT Hydrology) runs operationa
 
 **Use this branch if** you are running anything described in:
 - `Climate_data_load_how_to.md` in the climate database instructions folder on DIIMS: https://diims.gov.nt.ca/gnwt/llisapi.dll/link/230238639
+  (if the link doesn't work, the DIIMS path is: Enterprise › _GNWT › ECC - Environment and Cli… › ECC32 - Water Monitoring … › Water Monitoring and Stew… › 8930 - Water Monitoring a… › 8930-05 Climate Research … › Climate Research Monitori… › Climate Database › Instructions)
 - the Transboundary README (https://github.com/EmmaGRiley/NWTHydroclimate/tree/main/Transboundary)
 - *R coding session – instructions.docx*
 
@@ -70,4 +71,4 @@ FTS_PWD=<FTS account password>
 | `QAQC_meltingsnow.R` | Manual QC of tipping-bucket snowmelt |
 | others | Local copies of package functions used by the above |
 
-The full climate load procedure is in `Climate_data_load_how_to.md` (climate database instructions folder on DIIMS: https://diims.gov.nt.ca/gnwt/llisapi.dll/link/230238639).
+The full climate load procedure is in `Climate_data_load_how_to.md` (climate database instructions folder on DIIMS: https://diims.gov.nt.ca/gnwt/llisapi.dll/link/230238639; if the link doesn't work, the DIIMS path is: Enterprise › _GNWT › ECC - Environment and Cli… › ECC32 - Water Monitoring … › Water Monitoring and Stew… › 8930 - Water Monitoring a… › 8930-05 Climate Research … › Climate Research Monitori… › Climate Database › Instructions).
