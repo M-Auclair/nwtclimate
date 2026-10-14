@@ -3,7 +3,7 @@
 This branch is a **snapshot of the code GNWT (ECC, NT Hydrology) runs operationally**, saved in October 2026. It is **not meant to be merged into `main`**. `main` has since been restructured into an installable package, and some GNWT workflows (transboundary reporting, the climate database load, FTS downloads) depend on the file layout kept here.
 
 **Use this branch if** you are running anything described in:
-- `NT_Hydrology/Abiotic Monitoring/ClimateDB/Climate_data_load_how_to.md`
+- `Climate_data_load_how_to.md` in the climate database instructions folder on DIIMS: https://diims.gov.nt.ca/gnwt/llisapi.dll/link/230238639
 - the Transboundary README (https://github.com/EmmaGRiley/NWTHydroclimate/tree/main/Transboundary)
 - *R coding session – instructions.docx*
 
@@ -70,4 +70,4 @@ FTS_PWD=<FTS account password>
 | `QAQC_meltingsnow.R` | Manual QC of tipping-bucket snowmelt |
 | others | Local copies of package functions used by the above |
 
-The full climate load procedure is in `Climate_data_load_how_to.md` (ClimateDB folder on the shared drive).
+The full climate load procedure is in `Climate_data_load_how_to.md` (climate database instructions folder on DIIMS: https://diims.gov.nt.ca/gnwt/llisapi.dll/link/230238639).
